@@ -1,0 +1,9 @@
+name: 'PR Reject'
+description: 'Rejects Community Scenario PR'
+inputs:
+  repo-token:
+    description: 'Repo access token'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
