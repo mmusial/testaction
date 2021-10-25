@@ -4,6 +4,9 @@ inputs:
   repo-token:
     description: 'Repo access token'
     required: true
+  message:
+    description: "Why rejected"
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

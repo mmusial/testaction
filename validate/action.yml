@@ -4,6 +4,9 @@ inputs:
   repo-token:
     description: 'Repo access token'
     required: true
+outputs:
+  error-message:
+    description: 'Validation message'
 runs:
   using: 'node12'
   main: 'dist/index.js'

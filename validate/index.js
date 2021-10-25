@@ -6,7 +6,7 @@ const OWNER_REPO = process.env.GITHUB_REPOSITORY.split("/");
 const OWNER = OWNER_REPO[0];
 const REPO = OWNER_REPO[1];
 
-
+let OUTPUT_ERROR_MESSAGE = "";
 
 
 
@@ -113,16 +113,17 @@ async function GetPRFiles(octokit, pull_request)
 
 
 
-async function validateCommitFilesAuthor(octokit, pull_request) {
+async function validateCommitFilesAndAuthor(octokit, pull_request) {
     const files = await GetPRFiles(octokit, pull_request);
     if (files.length == 0) {
+        OUTPUT_ERROR_MESSAGE += "Pull-Request doesn't contain any file changes\n";
         return false;
     }
     
     
     const author_id = pull_request.user.id;
 
-    console.log(`pull author_id: ${author_id}`);
+    //console.log(`pull author_id: ${author_id}`);
 
     const regex = /Scenarios\/.+\//;
 
@@ -134,17 +135,17 @@ async function validateCommitFilesAuthor(octokit, pull_request) {
         
         const scenario_folder = filename.match(regex);
         console.log(`${filename} = ${scenario_folder}`);
-        if (scenario_folder === null) {
-            // TODO: Proper validation error about trying to merge into invalid path
+        if (scenario_folder === null) {            
+            OUTPUT_ERROR_MESSAGE += `Invalid Folder: ${filename}\n`;
             return false;
         }
 
         const original_scenario_folder_author_id = await getPathAuthorId(octokit, scenario_folder);
-        console.log(`original author_id: ${author_id}`);
+        //console.log(`original author_id: ${author_id}`);
         
         const author_validation_result = (original_scenario_folder_author_id === null || original_scenario_folder_author_id === author_id);
-        if (!author_validation_result) {
-            // TODO: Proper validation error about original author doesn't match PR one
+        if (!author_validation_result) {            
+            OUTPUT_ERROR_MESSAGE += `Invalid Pull-Request Author. Author is different then original author of "${scenario_folder}" scenario.\n`;
             return false;
         }
 
@@ -182,11 +183,12 @@ async function main(payload) {
         const repo_token = core.getInput('repo-token');
         const octokit = github.getOctokit(repo_token);
 
-        const commit_files_validation_result = await validateCommitFilesAuthor(octokit, pull_request);
+        const commit_files_validation_result = await validateCommitFilesAndAuthor(octokit, pull_request);
         console.log(`commit_files_validation_result: ${commit_files_validation_result}`);
 
         if (commit_files_validation_result !== true) {
-            core.setFailed(`Pull-Request validation failed!`);
+            core.setFailed(`Pull-Request validation failed!\n${OUTPUT_ERROR_MESSAGE}`);
+            core.setOutput('error-message', OUTPUT_ERROR_MESSAGE);
         }
     } catch (error) {
         core.setFailed(error.message);
