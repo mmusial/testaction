@@ -132,11 +132,11 @@ async function validateCommitFilesAndAuthor(octokit, pull_request) {
         const filename = file.filename;
         const status = file.status;
         
-        
-        const scenario_folder = filename.match(regex);
+        const file_folder = path.dirname(filename);
+        const scenario_folder = file_folder.match(regex);
         console.log(`${filename} = ${scenario_folder}`);
         if (scenario_folder === null) {            
-            OUTPUT_ERROR_MESSAGE += `Invalid Folder: ${filename}\n`;
+            OUTPUT_ERROR_MESSAGE += `Invalid folder "${file_folder}" for file "${filename}"\n`;
             return false;
         }
 
