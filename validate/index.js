@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const path = require('path');
 
 
 const OWNER_REPO = process.env.GITHUB_REPOSITORY.split("/");

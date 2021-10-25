@@ -8444,6 +8444,7 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(611);
 const github = __nccwpck_require__(9117);
+const path = __nccwpck_require__(5622);
 
 
 const OWNER_REPO = process.env.GITHUB_REPOSITORY.split("/");
