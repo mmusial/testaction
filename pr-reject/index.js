@@ -30,17 +30,15 @@ async function main(payload) {
             state: "closed"
           });
 
+          
         // Comment why PR is closed
         const msg = core.getInput('message');
-
         await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
             owner: OWNER,
             repo: REPO,
             issue_number: pull_number,
             body: msg
           });
-
-        await github.issues.createComment({...context.issue, body: msg})
     } catch (error) {
         core.setFailed(error.message);
     }
