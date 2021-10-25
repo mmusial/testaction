@@ -177,7 +177,7 @@ async function main(payload) {
             return;
         }
 
-        //console.log(JSON.stringify(pull_request, undefined, 2))
+        console.log(JSON.stringify(pull_request, undefined, 2))
         
         const repo_token = core.getInput('repo-token');
         const octokit = github.getOctokit(repo_token);

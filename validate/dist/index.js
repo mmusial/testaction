@@ -8476,7 +8476,7 @@ async function getPathAuthorId(octokit, path)
     const result = await octokit.request('GET /repos/{owner}/{repo}/commits?per_page=1&path={path}', {
         owner: OWNER,
         repo: REPO,
-        path: path
+        path: path,
       });
     
     if (!('data' in result)) {
@@ -8621,7 +8621,7 @@ async function main(payload) {
             return;
         }
 
-        //console.log(JSON.stringify(pull_request, undefined, 2))
+        console.log(JSON.stringify(pull_request, undefined, 2))
         
         const repo_token = core.getInput('repo-token');
         const octokit = github.getOctokit(repo_token);
